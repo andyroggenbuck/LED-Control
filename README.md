@@ -1,2 +1,2 @@
 # LED-Control
-Multiplexing, dimming &amp; color mixing of RGB LEDs
+Multiplexing, dimming &amp; color mixing of RGBW LEDs
