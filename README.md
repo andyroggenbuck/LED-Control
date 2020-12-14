@@ -3,7 +3,9 @@
 
 This project has been an educational exercise that attempts to combine multiplexing and pulse width modulation to control the color and dimming of an array of RGBW LEDs without needing a separate PWM signal for every color of every LED. I began programming the project in the Arduino IDE, but I've converted it into C in Visual Studio Code, using command line tools (gcc and avrdude) for compiling and downloading code to the Arduino Uno. This is mainly in an effort to avoid the simplified interface of the Arduino IDE and learn some software tools and skills that might be more broadly useful for embedded programming.
 
-![Schematic](/images/LED Controller schematic-page-001.jpg)
+<p>
+    <img src="/images/LED Controller schematic-page-001.jpg" width="220" height="240" />
+</p>
 
 Six common-anode RGBW LED strips are used for the LEDs. Each strip has its anode connected to power by a high side p-channel MOSFET, while four low side n-channel MOSFETs switch all cathodes of the same color to ground. A particular color of a particular strip only turns on when that strip is powered by the high side switch *and* that color's cathode is grounded by the low side switch; this allows every color of every strip to be controlled individually with a minimum of outputs from the Arduino.
 
