@@ -2,7 +2,7 @@
 **Multiplexing, dimming &amp; color mixing of RGBW LEDs**
 
 This project has been an educational exercise that attempts to combine multiplexing and pulse width modulation to control the color and dimming of an array of RGBW LEDs without needing a separate PWM signal for every color of every LED. I began programming the project in the Arduino IDE, but I've converted it into C in Visual Studio Code, using command line tools (gcc and avrdude) for compiling and downloading code to the Arduino Uno. This is mainly in an effort to avoid the simplified interface of the Arduino IDE and learn some software tools and skills that might be more broadly useful for embedded programming.
-<b>
+<br>
 <p>
     <img src="/images/LED Controller schematic-page-001.jpg" />
 </p>
