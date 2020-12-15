@@ -19,6 +19,10 @@ The four PWM signals are synchronized and operate at the same frequency (7.8kHz)
 
 This is the first project I've done that involves high(ish) speed MOSFET switching, so that's been another good educational experience. I built discrete BJT gate driver circuits for the six p-channel MOSFETs. A gate driver IC might be a more efficient choice here, but designing the discrete circuits was a good exercise.
 
+<p>
+    <img src="/images/Breadboard photo.jpg" />
+</p>
+
 **Software:**
 
 A timer driven interrupt handles switching between LED strips and updating the PWM duty cycle values. A lookup table (implemented as a 2D array) holds the duty cycle values for each color of each LED strip, and the ISR reads the values from this table. Consequently, changing a value in this table results in an immediate change in the color of the corresponding LED strip.

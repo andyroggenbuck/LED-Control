@@ -49,7 +49,7 @@ int pwm_table_curved[LED_NUM][4] = {
 };
 
 // brightness adjustment curve lookup table
-const unsigned char brightness[] = 
+const unsigned char brightness_curve[] = 
 {
   255,255,255,255,255,254,254,254,254,254,253,253,253,252,252,252,252,251,251,250,250,
   250,249,249,249,248,248,247,247,246,246,246,245,245,244,244,243,243,242,242,241,241,

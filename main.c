@@ -116,10 +116,10 @@ void delay (int length)
 
 void curveAdjust (int LED)
 {
-  pwm_table_curved[LED][0] = brightness[pwm_table_linear[LED][0]];
-  pwm_table_curved[LED][1] = brightness[pwm_table_linear[LED][1]];
-  pwm_table_curved[LED][2] = brightness[pwm_table_linear[LED][2]];
-  pwm_table_curved[LED][3] = brightness[pwm_table_linear[LED][3]];
+  pwm_table_curved[LED][0] = brightness_curve[pwm_table_linear[LED][0]];
+  pwm_table_curved[LED][1] = brightness_curve[pwm_table_linear[LED][1]];
+  pwm_table_curved[LED][2] = brightness_curve[pwm_table_linear[LED][2]];
+  pwm_table_curved[LED][3] = brightness_curve[pwm_table_linear[LED][3]];
 }
 
 // Rainbow Swirl algorithm
