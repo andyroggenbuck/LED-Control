@@ -8,7 +8,7 @@ I began programming the project in the Arduino IDE, but I've since converted it 
 **Hardware:**
 
 <p>
-    <img src="/images/LED Controller schematic.pdf" />
+    <img src="/images/LED Controller schematic-page-001.jpg" />
 </p>
 
 Common-anode RGBW LED strip lights are used as the LEDs shown in the schematic. Each strip has its anode connected to power by a high side p-channel MOSFET switch, while four low side n-channel MOSFETs switch all cathodes of the same color to ground. A particular color of a particular strip only turns on when that strip is powered by the high side switch *and* that color's cathode is grounded by the low side switch; this allows every color of every strip to be controlled individually with a minimum of outputs from the Arduino.
