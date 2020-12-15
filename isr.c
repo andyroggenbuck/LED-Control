@@ -7,16 +7,16 @@ ISR(TIMER1_COMPA_vect)
   PORTD |= (1 << OE);   // shift register output disable (LEDs off)
   
   /* update PWM duty values
-   * [(LEDmux + LEDnum - 1) % LEDnum] expression shifts LED number by 1,
+   * [(led_mux + LED_NUM - 1) % LED_NUM] expression shifts LED number by 1,
    * which compensates for PWM duty changes not taking effect until next cycle
    */
-  OCR0A = PWMtableB[(LEDmux + LEDnum + 1) % LEDnum][0];    // red
-  OCR0B = PWMtableB[(LEDmux + LEDnum + 1) % LEDnum][1];    // green
-  OCR2A = PWMtableB[(LEDmux + LEDnum + 1) % LEDnum][2];    // blue  
-  OCR2B = PWMtableB[(LEDmux + LEDnum + 1) % LEDnum][3];    // white
+  OCR0A = pwm_table_curved[(led_mux + LED_NUM + 1) % LED_NUM][0];    // red
+  OCR0B = pwm_table_curved[(led_mux + LED_NUM + 1) % LED_NUM][1];    // green
+  OCR2A = pwm_table_curved[(led_mux + LED_NUM + 1) % LED_NUM][2];    // blue  
+  OCR2B = pwm_table_curved[(led_mux + LED_NUM + 1) % LED_NUM][3];    // white
   
   // update SER bit
-  if (LEDmux == 0)
+  if (led_mux == 0)
     PORTD |= (1 << SER);   // if first LED, SER out = 1 (on)
   else
     PORTD &= ~(1 << SER);   // else SER out = 0 (off) 
@@ -31,9 +31,9 @@ ISR(TIMER1_COMPA_vect)
   
   PORTD &= ~(1 << OE);    // enable SR outputs (LEDs)
   
-  // advance LEDmux to next LED number
-  if (LEDmux == (LEDnum - 1))
-    LEDmux = 0;            // if last LED reached, reset LEDmux
+  // advance led_mux to next LED number
+  if (led_mux == (LED_NUM - 1))
+    led_mux = 0;            // if last LED reached, reset led_mux
   else
-    LEDmux++;              // else increment LEDmux
+    led_mux++;              // else increment led_mux
 }

@@ -1,25 +1,35 @@
+/*
+Arduino pin definitions no longer used outside Arduino IDE.
+Leaving them here for reference.
+
+// PWM output pins
+#define PWM_RED   6    // pin 6: red PWM
+#define PWM_GREEN 5    // pin 5: green PWM
+#define PWM_BLUE  11   // pin 11: blue PWM
+#define PWM_WHITE 3    // pin 3: white PWM
+*/
+
 // shift register serial communication pins
 #define OE 2    // pin 2: SR output enable (G-bar)
 #define RCK 0   // pin 0: SR RCK (latch)
 #define SER 4   // pin 4: SR serial data
 #define CLK 7   // pin 7: SR serial clock
 
-// PWM output pins
-#define Rpwm 6    // pin 6: red PWM
-#define Gpwm 5    // pin 5: green PWM
-#define Bpwm 11   // pin 11: blue PWM
-#define Wpwm 3    // pin 3: white PWM
+// number of LEDs
+#define LED_NUM 6
 
-#define LEDnum 6  // number of LEDs
+// PWM values for predefined colors
+#define RED     255, 0, 0, 0
+#define GREEN   0, 255, 0, 0
+#define BLUE    0, 0, 255, 0
+#define WHITE   0, 0, 0, 255
+#define AMBER   255, 50, 0, 0
+#define VIOLET  50, 0, 255, 0
 
-// dimming values for predefined colors
-#define Amber 255, 50, 0, 0
-#define Violet 50, 0, 255, 0
-
-int LEDmux = 0;   // MUX counter
+int led_mux;   // MUX counter
 
 // table of RGB dimming values (linear 0-255) [# of LEDs][4 PWM channels]
-int PWMtableA[LEDnum][4] = {
+int pwm_table_linear[LED_NUM][4] = {
   {0,0,0,0},
   {0,0,0,0},
   {0,0,0,0},
@@ -29,17 +39,18 @@ int PWMtableA[LEDnum][4] = {
 };
 
 // table of RGB dimming values (brightness-curve-adjusted) [# of LEDs][4 PWM channels]
-int PWMtableB[LEDnum][4] = {
-  {25,255,255,255},
-  {255,25,255,255},
-  {255,255,25,255},
-  {255,255,255,25},
-  {25,255,200,255},
-  {25,200,255,255}
+int pwm_table_curved[LED_NUM][4] = {
+  {255,255,255,255},
+  {255,255,255,255},
+  {255,255,255,255},
+  {255,255,255,255},
+  {255,255,255,255},
+  {255,255,255,255}
 };
 
-/* // brightness adjustment curve lookup table
-const uint8_t brightness[] PROGMEM = {
+// brightness adjustment curve lookup table
+const unsigned char brightness[] = 
+{
   255,255,255,255,255,254,254,254,254,254,253,253,253,252,252,252,252,251,251,250,250,
   250,249,249,249,248,248,247,247,246,246,246,245,245,244,244,243,243,242,242,241,241,
   240,240,239,239,238,237,237,236,236,235,235,234,233,233,232,232,231,230,230,229,228,
@@ -54,17 +65,18 @@ const uint8_t brightness[] PROGMEM = {
   51,50,48,47,46,45,43,42,41,39,38,37,36,34,33
 };
 
-// Prototypes:
-// Fade function
-void Fade (int R_end, int G_end, int B_end, int W_end, int N_steps, 
-  int LED_A, int LED_B = LEDnum, int LED_C = LEDnum, int LED_D = LEDnum, 
-  int LED_E = LEDnum, int LED_F = LEDnum); */
-
-/* // Rainbow swirl algorithm: updates RGB PWM values
-void rainbow (int &R, int &G, int &B);
+// blocking delay function that doesn't use the timers
+void delay (int delay);
 
 // Brightness curve adjust function
-void curveAdjust (int LED, int R, int G, int B, int W);
+void curveAdjust (int LED);
 
-// blocking delay function that doesn't use the timers
-void Delay (int length); */
+// Rainbow swirl algorithm: updates RGB PWM values
+void rainbow (int*, int*, int*);
+
+/*
+// Fade function
+void Fade (int R_end, int G_end, int B_end, int W_end, int N_steps, 
+  int LED_A, int LED_B = LED_NUM, int LED_C = LED_NUM, int LED_D = LED_NUM, 
+  int LED_E = LED_NUM, int LED_F = LED_NUM); 
+*/
