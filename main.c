@@ -133,9 +133,7 @@ void rainbow (int *R, int *G, int *B)
         {
             (*B)++;
             (*G)--;
-        } 
-        else
-        {
+        } else {
             (*R)++;
             (*B)--;
         }
@@ -146,9 +144,7 @@ void rainbow (int *R, int *G, int *B)
         {
             (*R)++;
             (*B)--;
-        }
-        else
-        {
+        } else {
             (*G)++;
             (*R)--;
         }
@@ -159,9 +155,7 @@ void rainbow (int *R, int *G, int *B)
         {
             (*G)++;
             (*R)--;
-        }
-        else
-        {
+        } else {
             (*B)++;
             (*G)--;
         }
