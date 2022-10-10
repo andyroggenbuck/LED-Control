@@ -1,4 +1,5 @@
 # LED Control
+[Code Repository Here](https://github.com/andyroggenbuck/LED-Control)
 
 I did this project as an educational exercise to combine multiplexing and pulse width modulation to control the color and dimming of six RGBW LED strip lights. Although more practical solutions for lighting control already exist, this project gave me the opportunity to learn the timer modules of the ATmega328P in more detail, explore multiplexing using a shift register, and design some MOSFET switching circuits. I also used this project to learn how to program the Arduino without the Arduino IDE, instead using VS Code with command line tools GCC and AVRDUDE.
 
