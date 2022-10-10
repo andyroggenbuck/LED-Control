@@ -1,32 +1,43 @@
-# LED-Control
-**Multiplexing, dimming &amp; color mixing of RGBW LEDs**
+# LED Control
 
-This project has been an educational exercise that attempts to combine multiplexing and pulse width modulation to control the color and dimming of an array of RGBW LEDs without needing a separate PWM signal for every color of every LED. I've made the basic concept work, and now I'm reorganizing the project and using it to get familiarized with GitHub and some other software development tools.
+I did this project as an educational exercise to combine multiplexing and pulse width modulation to control the color and dimming of six RGBW LED strip lights. Although more practical solutions for lighting control already exist, this project gave me the opportunity to learn the timer modules of the ATmega328P in more detail, explore multiplexing using a shift register, and design some MOSFET switching circuits. I also used this project to learn how to program the Arduino without the Arduino IDE, instead using VS Code with command line tools GCC and AVRDUDE.
 
-I began programming the project in the Arduino IDE, but I've since converted it into C in Visual Studio Code, using command line tools (gcc and avrdude) for compiling and downloading code to the Arduino Uno. This is to avoid the simplified interface of the Arduino IDE and learn some software tools and skills that might be more broadly useful for embedded programming.
+The simplified diagram below illustrates the hardware approach for controlling the LEDs. Each LED strip has a high side switch to connect its common anode to 12V, while each color has a low side switch to connect all cathodes of that color to ground. This allows each color of each LED strip to be controlled individually.
 
-**Hardware:**
-
-<p>
-    <img src="/images/LED Controller schematic-page-001.jpg" />
+</br>
+<p align="center">
+  <img src="https://github.com/andyroggenbuck/LED-Control/blob/main/images/Block%20Diagram%20png.png" width="80%"></br>
+  <i>Simplified hardware diagram</i>
 </p>
+</br>
 
-Common-anode RGBW LED strip lights are used as the LEDs shown in the schematic. Each strip has its anode connected to power by a high side p-channel MOSFET switch, while four low side n-channel MOSFETs switch all cathodes of the same color to ground. A particular color of a particular strip only turns on when that strip is powered by the high side switch *and* that color's cathode is grounded by the low side switch; this allows every color of every strip to be controlled individually with a minimum of outputs from the Arduino.
+The timing diagram below shows how this hardware scheme is used to implement multiplexed PWM. Each LED strip is powered on in sequence, while the synchronized PWM signals on the low side switches activate each color for the required duration for each strip. The switching frequency is about 7.8kHz. At the end of each cycle, an interrupt service routine changes the PWM duty cycles as required for the color of the next LED strip in the sequence. The PWM signals shown below are arbitrary; the actual pulse widths are determined by values stored in a lookup table. The program's main routine can create lighting effects by changing the values in the lookup table while the multiplexing routine runs.
 
-Four Arduino outputs control a shift register, whose outputs drive the high side MOSFETs, and four more outputs provide PWM signals for the four low side MOSFETs. Currently only six LED strips are connected to the shift register's outputs, but two more could be added (or even more if another shift register is added) without needing any more outputs from the Arduino.
-
-The four PWM signals are synchronized and operate at the same frequency (7.8kHz), and the LED strips are turned on one at a time, switching from one to the next at the same frequency as the PWM signals. The result is each LED strip stays powered for the duration of a single PWM period; then it is switched off, the PWM duty cycles are changed, and the next LED strip is powered on as the next PWM cycle begins.
-
-This is the first project I've done that involves high(ish) speed MOSFET switching, so that's been another good educational experience. I built discrete BJT gate driver circuits for the six p-channel MOSFETs. A gate driver IC might be a more efficient choice here, but designing the discrete circuits was a good exercise.
-
-<p>
-    <img src="/images/Breadboard photo.jpg" />
+</br>
+<p align="center">
+  <img src="https://github.com/andyroggenbuck/LED-Control/blob/main/images/Timing%20Diagram.png" width="90%"></br>
+  <i>Timing diagram</i>
 </p>
+</br>
 
-**Software:**
+The schematic below shows the hardware in more detail. Six outputs from the shift register IC1 generate the LED Enable signals, while four outputs from the Arduino control the shift register. The LED Enable signals are level-shifted by discrete BJT gate driver circuits to drive the high side MOSFETS Q4 and Q12. A gate driver IC would likely be more economical, but building the discrete gate drivers was another good educational exercise. The Arduino generates the four PWM signals used to drive the low side MOSFETS Q5-Q8, which performed sufficiently well without gate drivers in this application. Pull-down resistors on the high side MOSFETS and pull-ups on the low side ensure that the LEDs turn off immediately when the MOSFETS turn off, eliminating any LEDs glowing when they're not supposed to.
 
-A timer driven interrupt handles switching between LED strips and updating the PWM duty cycle values. A lookup table (implemented as a 2D array) holds the duty cycle values for each color of each LED strip, and the ISR reads the values from this table. Consequently, changing a value in this table results in an immediate change in the color of the corresponding LED strip.
+</br>
+<p align="center">
+  <img src="https://github.com/andyroggenbuck/LED-Control/blob/main/images/LED%20Controller%20schematic%20v2.jpg" width = "100%"></br>
+  <i>Schematic</i>
+</p>
+</br>
 
-While the periodic interrupts keep the LED colors updated per the table, the program's main routine can change the values in the table to create lighting effects. Developing a method to generate these effects is the next part of the project that needs work. Currently a rainbow swirl effect is generated by initializing the table to a set of starting values and then entering a loop that conditionally increments or decrements each value. I might just see how many other effects I can figure out how to generate with this type of algorithm-based approach.
+The device prototype, built on a breadboard, is shown below.
 
-Another method I've tinkered with is creating a 3D lookup table containing a series of table states that can be played back like frames of an animation. This method is simple to implement in software, but using Excel to generate the lookup tables themselves gets pretty tedious pretty quickly.
+</br>
+<p align="center">
+    <img src="https://github.com/andyroggenbuck/LED-Control/blob/main/images/Breadboard%20photo.jpg" width = "90%"></br>
+    <i>Device prototype</i>
+</p>
+</br>
+
+## Conclusions
+
+The benefit of using the shift register to implement multiplexing was minimal in this application. Four Arduino outputs were used to control six shift register outputs, saving only two Arduino pins. The output-saving benefit would be more significant if more LEDs were added -- the two unused shift register outputs could be utilized, and even more outputs could be gained by cascading another shift register. But the downside is that in this case only one LED is lit at a time, so as more are added, they all get dimmer and the overall multiplexing frequency gets slower. Still, a significant number of LEDs could be controlled individually in an application where high-intensity lighting is not required.
